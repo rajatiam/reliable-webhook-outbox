@@ -1,7 +1,7 @@
 import hashlib, io, json, tempfile, unittest
 from pathlib import Path
 from unittest.mock import patch
-from fastapi.testclient import TestClient
+from tests.helpers import AuthorizedClient as TestClient
 import app, api
 
 EXAMPLE = json.loads((Path(__file__).parent/'project.json').read_text(encoding='utf-8'))['example']
@@ -22,7 +22,7 @@ class Tests(unittest.TestCase):
         with self.assertRaises(ValueError): app.create(dict(EXAMPLE,**INVALID))
     def test_workflow(self):
         row=app.create(dict(EXAMPLE))
-        with patch('domain.urlopen') as request:
+        with patch('backend.domain.urlopen') as request:
             request.return_value.__enter__.return_value.status=200
             result=app.action(row['id'],ACTION)
         for key,value in EXPECTED.items(): self.assertEqual(result[key],value)
@@ -62,7 +62,7 @@ class Tests(unittest.TestCase):
         elif kind=='planner':
             with self.assertRaises(ValueError): app.create(dict(EXAMPLE,graph='{"api":["missing"]}'))
         elif kind=='webhooks':
-            with patch('domain.urlopen',side_effect=OSError('target unavailable')):
+            with patch('backend.domain.urlopen',side_effect=OSError('target unavailable')):
                 self.assertEqual(app.action(row['id'],'deliver')['status'],'failed')
 
 if __name__=='__main__': unittest.main()

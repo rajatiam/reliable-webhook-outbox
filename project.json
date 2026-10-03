@@ -1,5 +1,5 @@
 {
-  "name": "Webhook Outbox",
+  "name": "Reliable Webhook Outbox",
   "kind": "webhooks",
   "entity": "delivery",
   "accent": "#db2777",
@@ -30,5 +30,7 @@
   "demo_expected": {
     "status": "delivered",
     "attempts": 1
-  }
+  },
+  "slug": "reliable-webhook-outbox",
+  "engineering_version": "3.0.0"
 }

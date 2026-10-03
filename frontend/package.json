@@ -1,5 +1,5 @@
 {
-  "name": "16-webhook-outbox",
+  "name": "reliable-webhook-outbox",
   "version": "2.0.0",
   "private": true,
   "scripts": {

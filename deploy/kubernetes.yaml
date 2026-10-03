@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: 16-webhook-outbox-data
+  name: reliable-webhook-outbox-data
 spec:
   accessModes: [ReadWriteOnce]
   resources:
@@ -11,18 +11,18 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: 16-webhook-outbox
+  name: reliable-webhook-outbox
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: 16-webhook-outbox
+      app: reliable-webhook-outbox
   template:
     metadata:
       labels:
-        app: 16-webhook-outbox
+        app: reliable-webhook-outbox
     spec:
       securityContext:
         runAsNonRoot: true
@@ -30,7 +30,7 @@ spec:
         fsGroup: 10001
       containers:
         - name: app
-          image: 16-webhook-outbox:local
+          image: reliable-webhook-outbox:local
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8116
@@ -60,15 +60,15 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: 16-webhook-outbox-data
+            claimName: reliable-webhook-outbox-data
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: 16-webhook-outbox
+  name: reliable-webhook-outbox
 spec:
   selector:
-    app: 16-webhook-outbox
+    app: reliable-webhook-outbox
   ports:
     - port: 80
       targetPort: 8116
