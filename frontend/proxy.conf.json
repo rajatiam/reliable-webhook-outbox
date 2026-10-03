@@ -1,0 +1,18 @@
+{
+  "/api/**": {
+    "target": "http://127.0.0.1:8116",
+    "secure": false
+  },
+  "/r/**": {
+    "target": "http://127.0.0.1:8116",
+    "secure": false
+  },
+  "/health": {
+    "target": "http://127.0.0.1:8116",
+    "secure": false
+  },
+  "/metrics": {
+    "target": "http://127.0.0.1:8116",
+    "secure": false
+  }
+}

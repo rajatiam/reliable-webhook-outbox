@@ -1,0 +1,34 @@
+{
+  "name": "Webhook Outbox",
+  "kind": "webhooks",
+  "entity": "delivery",
+  "accent": "#db2777",
+  "skills": "HTTP delivery, outbox state, idempotency keys, retries and failure reporting",
+  "description": "Deliver real JSON webhooks and inspect durable attempt history.",
+  "example": {
+    "name": "Order created",
+    "target": "http://127.0.0.1:8116/api/receiver",
+    "payload": "{\"order\":42}"
+  },
+  "port": 8116,
+  "fields": [
+    "name",
+    "target",
+    "payload"
+  ],
+  "stack": [
+    "Python",
+    "FastAPI",
+    "Angular",
+    "TypeScript",
+    "SQLite",
+    "Docker",
+    "Kubernetes",
+    "GitHub Actions"
+  ],
+  "demo_action": "deliver",
+  "demo_expected": {
+    "status": "delivered",
+    "attempts": 1
+  }
+}

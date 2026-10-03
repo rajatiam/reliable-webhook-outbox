@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: 16-webhook-outbox-data
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: 16-webhook-outbox
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: 16-webhook-outbox
+  template:
+    metadata:
+      labels:
+        app: 16-webhook-outbox
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        fsGroup: 10001
+      containers:
+        - name: app
+          image: 16-webhook-outbox:local
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8116
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8116
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8116
+            initialDelaySeconds: 5
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+          volumeMounts:
+            - name: data
+              mountPath: /app/data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: 16-webhook-outbox-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: 16-webhook-outbox
+spec:
+  selector:
+    app: 16-webhook-outbox
+  ports:
+    - port: 80
+      targetPort: 8116
